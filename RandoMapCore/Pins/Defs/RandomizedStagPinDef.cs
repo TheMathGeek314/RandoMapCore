@@ -1,56 +1,61 @@
 ﻿using ItemChanger;
+using MagicUI.Elements;
+using MapChanger;
+using RandoMapCore.Pins.Defs;
 using RandoMapCore.Settings;
 
 namespace RandoMapCore.Pins;
 
-internal sealed class RandomizedStagPinDef: RandomizedPinDef
+internal sealed class RandomizedStagPinDef(AbstractPlacement placement, PoolsCollection poolsCollection) : ICLogicPinDef(placement, poolsCollection)
 {
-    public RandomizedStagPinDef(AbstractPlacement placement)
-        : base(placement)
-    {
-        Stag = new(placement.Name);
-    }
-
-    internal StagInfo Stag { get; }
+    internal bool IsActiveStag { get; private set; }
+    internal bool IsOpenedStag { get; private set; }
 
     internal override void Update()
     {
         base.Update();
-        Stag.Update();
+
+        IsOpenedStag = RandoMapCoreMod.Data.IsOpenedCustomStag(Placement.Name);
+        IsActiveStag = RandoMapCoreMod.GS.ShowCustomStags && IsOpenedStag;
     }
 
     internal override bool ActiveByCurrentMode()
     {
-        return DoOverride() || base.ActiveByCurrentMode();
+        return IsActiveStag || base.ActiveByCurrentMode();
     }
 
     internal override bool ActiveBySettings()
     {
-        return DoOverride() || base.ActiveBySettings();
+        return IsActiveStag || base.ActiveBySettings();
     }
 
     internal override bool ActiveByProgress()
     {
-        return DoOverride() || base.ActiveByProgress();
+        return IsActiveStag || base.ActiveByProgress();
     }
 
     internal override IEnumerable<ScaledPinSprite> GetPinSprites()
     {
-        return DoOverride() ? [RmcPinManager.Psm.GetSprite("Stags")] : base.GetPinSprites();
+        return IsActiveStag ? [RmcPinManager.Psm.GetSprite("Stags")] : base.GetPinSprites();
     }
 
     internal override PinShape GetMixedPinShape()
     {
-        return DoOverride() ? PinShape.Circle : base.GetMixedPinShape();
+        return IsActiveStag ? PinShape.Square : base.GetMixedPinShape();
     }
 
     internal override float GetZPriority()
     {
-        return DoOverride() ? -1f : base.GetZPriority();
+        return IsActiveStag ? -1f : base.GetZPriority();
     }
 
-    private bool DoOverride()
+    private protected override RunCollection GetStatusText()
     {
-        return Stag.IsActiveStag && RandoMapCoreMod.GS.StagSprite == StagSpriteSetting.AlwaysStag;
+        return
+        [
+            .. base.GetStatusText(),
+            new Run(", "),
+            new Run((IsOpenedStag ? "station open" : "station locked").L()),
+        ];
     }
 }

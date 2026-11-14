@@ -53,7 +53,7 @@ public class GlobalSettings
     public QMarkSetting QMarks { get; private set; } = QMarkSetting.Off;
 
     [JsonProperty]
-    public StagSpriteSetting StagSprite { get; private set; } = StagSpriteSetting.Default;
+    public bool ShowCustomStags { get; private set; } = true;
 
     // Pathfinder options
     [JsonProperty]
@@ -131,6 +131,11 @@ public class GlobalSettings
         ShowBenchwarpPins = !ShowBenchwarpPins;
     }
 
+    internal void ToggleCustomStags()
+    {
+        ShowCustomStags = !ShowCustomStags;
+    }
+
     internal void ToggleRoomSelection()
     {
         RoomSelectionOn = !RoomSelectionOn;
@@ -178,11 +183,6 @@ public class GlobalSettings
     internal void ToggleQMarkSetting()
     {
         QMarks = (QMarkSetting)(((int)QMarks + 1) % Enum.GetNames(typeof(QMarkSetting)).Length);
-    }
-
-    internal void ToggleStagSpriteSetting()
-    {
-        StagSprite = (StagSpriteSetting)(((int)StagSprite + 1) % Enum.GetNames(typeof(StagSpriteSetting)).Length);
     }
 
     internal void TogglePathfinderSequenceBreaks()

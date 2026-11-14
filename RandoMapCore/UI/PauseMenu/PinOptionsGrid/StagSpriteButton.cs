@@ -7,18 +7,16 @@ internal class StagSpriteButton: ExtraButton
 {
     protected override void OnClick()
     {
-        RandoMapCoreMod.GS.ToggleStagSpriteSetting();
+        RandoMapCoreMod.GS.ToggleCustomStags();
     }
 
     protected override TextFormat GetTextFormat()
     {
-        return (
-            $"{"Stag Sprite".L()}:\n" + RandoMapCoreMod.GS.StagSprite.ToString().ToWhitespaced().L()
-        ).ToNeutralTextFormat();
+        return UIExtensions.GetBoolTextFormat($"{"Custom Stags".L()}:\n", RandoMapCoreMod.GS.ShowCustomStags);
     }
 
     protected override TextFormat? GetHoverTextFormat()
     {
-        return "Always show stag pin for MoreStags locations".L().ToNeutralTextFormat();
+        return "Always show unlocked custom stags".L().ToNeutralTextFormat();
     }
 }
