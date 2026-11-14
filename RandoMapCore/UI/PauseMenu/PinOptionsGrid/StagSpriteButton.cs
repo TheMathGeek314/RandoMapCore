@@ -3,7 +3,8 @@ using MapChanger.UI;
 
 namespace RandoMapCore.UI;
 
-internal class StagSpriteButton: ExtraButton {
+internal class StagSpriteButton: ExtraButton
+{
     protected override void OnClick()
     {
         RandoMapCoreMod.GS.ToggleStagSpriteSetting();
@@ -11,12 +12,9 @@ internal class StagSpriteButton: ExtraButton {
 
     protected override TextFormat GetTextFormat()
     {
-        var text = $"{"Stag Sprite".L()}:\n";
-
         return (
-            text + RandoMapCoreMod.GS.StagSprite.ToString().ToWhitespaced().L(),
-            RmcColorSetting.UI_Neutral
-        ).ToTextFormat();
+            $"{"Stag Sprite".L()}:\n" + RandoMapCoreMod.GS.StagSprite.ToString().ToWhitespaced().L()
+        ).ToNeutralTextFormat();
     }
 
     protected override TextFormat? GetHoverTextFormat()
